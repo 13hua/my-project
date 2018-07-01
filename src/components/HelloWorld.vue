@@ -90,6 +90,12 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
+  },
+  mounted() {
+    this.$ajax.get('/api/data').then(res=>{
+      this.data = res.data;
+      console.log(res)
+    })
   }
 }
 </script>
