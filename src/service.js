@@ -9,6 +9,6 @@ service.interceptors.request.use(
     config.headers.Authorization = `${token}`
     return config
   }
-);
+)
 
 export default service

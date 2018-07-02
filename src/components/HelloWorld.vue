@@ -91,9 +91,9 @@ export default {
       msg: 'Welcome to Your Vue.js App'
     }
   },
-  mounted() {
-    this.$ajax.get('/api/data').then(res=>{
-      this.data = res.data;
+  mounted () {
+    this.$http.get('/api/data').then(res => {
+      this.data = res.data
       console.log(res)
     })
   }
@@ -102,7 +102,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 ul {
