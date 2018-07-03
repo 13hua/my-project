@@ -89,15 +89,15 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
-    }
+    };
   },
   mounted () {
     this.$http.get('/api/data').then(res => {
-      this.data = res.data
-      console.log(res)
-    })
+      this.data = res.data;
+      console.log(res);
+    });
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

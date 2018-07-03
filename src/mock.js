@@ -1,5 +1,5 @@
 // 引入mockjs
-const Mock = require('mockjs')
+const Mock = require('mockjs');
 // 使用mockjs模拟数据
 // Mock.mock('/api/data', (req, res) => {
 //   return {
@@ -42,12 +42,12 @@ var template = {
   'array3|3': ['Mock.js'],
 
   'function': function () {
-    return this.title
+    return this.title;
   }
-}
+};
 
 // 使用mockjs模拟数据
-Mock.mock('/api/data', 'get', Mock.toJSONSchema(template))
+Mock.mock('/api/data', 'get', Mock.toJSONSchema(template));
 Mock.setup({
   timeout: '200-600'
-})
+});
