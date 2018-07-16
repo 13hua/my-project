@@ -67,13 +67,13 @@ export default {
           if (loginParams.username === 'admin' && loginParams.password === '123456') {
             _this.logining = false;
             sessionStorage.setItem('user', JSON.stringify(loginParams));
-          }else{
+          } else {
             _this.logining = false;
-            _this.$alert('用户名或密码错误！','提示信息',{
-              confirmButtonText:'确定'
+            _this.$alert('用户名或密码错误！', '提示信息', {
+              confirmButtonText: '确定'
             });
           }
-        }else{
+        } else {
           console.log('error submit!!!');
           return false;
         }
