@@ -47,13 +47,6 @@ export default {
       checked: true
     };
   },
-
-  components: {},
-
-  computed: {},
-
-  mounted: {},
-
   methods: {
     handleSubmit2 (ev) {
       var _this = this;
@@ -61,12 +54,13 @@ export default {
         if (valid) {
           _this.logining = true;
           var loginParams = {
-            username: this.ruleForms.account,
+            username: this.ruleForm2.account,
             password: this.ruleForm2.checkPass
           };
           if (loginParams.username === 'admin' && loginParams.password === '123456') {
             _this.logining = false;
             sessionStorage.setItem('user', JSON.stringify(loginParams));
+            _this.$router.push({ path: '/home' });
           } else {
             _this.logining = false;
             _this.$alert('用户名或密码错误！', '提示信息', {

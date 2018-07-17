@@ -17,13 +17,6 @@ export default {
       activeName: 'second'
     };
   },
-
-  components: {},
-
-  computed: {},
-
-  mounted: {},
-
   methods: {
     handleClick (tab, event) {
       console.log(tab, event);

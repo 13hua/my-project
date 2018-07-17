@@ -1,47 +1,56 @@
-<template>
+<template lang="html">
   <div class="home-container">
     <el-row class="container">
+      <!-- main -->
       <el-col :span="24" class="header">
-        <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">{{collapsed?'':sysName}}</el-col>
-        <el-col :span="10"></el-col>
-        <div class="tools" @click.prevent="collapseFun">
-          <i class="fa fa-align-justify"></i>
-        </div>
+        <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">{{collapsed?'V':sysName}}</el-col>
+        <el-col :span="10">
+          <div class="tools" @click.prevent="collapseFun">
+            <i class="fa fa-align-justify"></i>
+          </div>
+        </el-col>
+        <el-col :span="4" class="userinfo">
+          <el-dropdown trigger="hover">
+            <span class="el-dropdown-link userinfo-inner">{{sysUserName}}</span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>我的消息</el-dropdown-item>
+              <el-dropdown-item>设置</el-dropdown-item>
+              <el-dropdown-item divided @click.native="logoutFun">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-col>
       </el-col>
-      <el-col :span="4" class="userinfo">
-        <el-dropdown trigger="hover">
-          <span class="el-dropdown-link userinfo-inner">{{sysUserName}}</span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>我的消息</el-dropdown-item>
-            <el-dropdown-item>设置</el-dropdown-item>
-            <el-dropdown-item divided @click.native="logoutFun">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-col>
+      <!-- main -->
       <el-col :span="24" class="main">
         <aside :class="collapsed?'menu-collapsed':'menu-expanded'">
           <!-- 导航菜单 -->
-          <el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened router v-show="!collapsed">
+          <el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened router v-show="!collapsed" style="width:100%;">
             <div v-for="(item,index) in $router.options.routes" :key="index" v-if="!item.hidden">
-              <el-submenu :index="index+''" v-if="!item.leaf">
+              <!-- <p>{{item}}</p> -->
+              <el-submenu :index="index+''" v-if="!item.leaf && !item.redirect">
                 <template slot="title">
                   <i :class="item.iconCls"></i>
                   {{item.name}}
                 </template>
-                <el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
+                <el-menu-item v-for="child in item.children" :key="child.path" :index="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
               </el-submenu>
+              <el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
             </div>
           </el-menu>
           <!-- 导航菜单-折叠后 -->
-          <ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapse" ref="menuCollapsed">
-            <li v-for="(item,index) in $router.options.routes" :key="index" v-if="!item.hidden" class="el-submenu item">
+          <ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
+            <li v-for="(item,index) in $router.options.routes" :key="index" v-if="!item.hidden  && !item.redirect " class="el-submenu item">
+              <!-- <p>{{item.redirect}}</p> -->
               <template v-if="!item.leaf">
-                <div class="el-submenu__title" style="padding-left:20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
-                  <i :class="item.iconCls"></i>
+                <div>
+                  <!-- <p>{{!item.redirect}}--{{!item.leaf && !item.redirect}}</p> -->
+                  <div class="el-submenu__title" style="padding-left:20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
+                    <i :class="item.iconCls"></i>
+                  </div>
+                  <ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
+                    <li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left:40px; height:56px;line-height:56px;" :class="$route.path===child.path?'is-active':''" @click="$router.push(child.path)">{{child.name}}</li>
+                  </ul>
                 </div>
-                <ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
-                  <li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left:40px; height:56px;line-height:56px;" :class="$route.path===child.path?'is-active':''" @click="$router.push(child.path)">{{child.name}}</li>
-                </ul>
               </template>
               <template v-else>
                 <li class="el-submenu">
@@ -63,7 +72,7 @@
             </el-col>
             <el-col :span="24" class="content-wrapper">
               <transition name="fade" mode="out-in">
-                <route-view></route-view>
+                <router-view></router-view>
               </transition>
             </el-col>
           </div>
@@ -78,20 +87,15 @@ export default {
   data () {
     return {
       sysName: 'VueDemo',
-      sysUseName: '',
+      sysUserName: '',
       collapsed: false
     };
   },
-
-  components: {},
-
-  computed: {},
-
   mounted: function () {
     let user = sessionStorage.getItem('user');
     if (user) {
       user = JSON.parse(user);
-      this.sysUseName = user.username || '';
+      this.sysUserName = user.username || '';
     }
   },
 
