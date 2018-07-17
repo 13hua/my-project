@@ -56,7 +56,7 @@ export default {
           var loginParams = {
             username: this.ruleForm2.account,
             password: this.ruleForm2.checkPass
-          };
+          }; 
           if (loginParams.username === 'admin' && loginParams.password === '123456') {
             _this.logining = false;
             sessionStorage.setItem('user', JSON.stringify(loginParams));
